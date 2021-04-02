@@ -30,7 +30,7 @@ test {
 // generates the spring controller interfaces from openapi spec in src/main/resources/service.yaml
 openApiGenerate {
     generatorName = "spring"
-    inputSpec = "$projectDir/src/main/resources/service.yaml"
+    inputSpec = "$projectDir/swagger-output/swagger.yaml"
     outputDir = "$buildDir/generated"
     apiPackage = "com.uniheart.wechatmpservice.api"
     invokerPackage = "com.uniheart.wechatmpservice"
