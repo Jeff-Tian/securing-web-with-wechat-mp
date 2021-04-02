@@ -1,7 +1,8 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.4'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
+    id 'org.springframework.boot' version '2.4.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.openapi.generator' version "4.3.1"
+    id 'java'
 }
 
 group = 'com.uniheart'
@@ -9,17 +10,38 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.security:spring-security-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.security:spring-security-test'
+    implementation "io.swagger.parser.v3:swagger-parser:2.0.20"
+    implementation "org.openapitools:jackson-databind-nullable:0.2.1"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
+
+// generates the spring controller interfaces from openapi spec in src/main/resources/service.yaml
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$projectDir/src/main/resources/service.yaml"
+    outputDir = "$buildDir/generated"
+    apiPackage = "com.uniheart.wechatmpservice.api"
+    invokerPackage = "com.uniheart.wechatmpservice"
+    modelPackage = "com.uniheart.wechatmpservice.models"
+    configOptions = [
+            dateLibrary: "java8",
+            interfaceOnly: "true",
+    ]
+}
+
+// forces generation of spring controllers on compile, adding them to the sources for compilation
+compileJava.dependsOn tasks.openApiGenerate
+sourceSets.main.java.srcDir "$buildDir/generated/src/main/java"
+sourceSets.main.resources.srcDir "$buildDir/generated/src/main/resources"
