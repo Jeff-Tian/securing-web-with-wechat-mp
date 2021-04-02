@@ -17,8 +17,13 @@ public class WechatMpAuthProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("WechatMP"));
-        return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials()
-                , authorities);
+
+        if (authentication.getPrincipal().toString().equals("abcd")) {
+            return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials()
+                    , authorities);
+        }
+
+        return null;
     }
 
     @Override
