@@ -26,6 +26,32 @@ paths:
                 sceneId: 66afab27-c8fa-417d-a28a-95d5a977e1d3
                 ticket: gQGT7zwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAycnE3QWw3b3JmazMxb2FMQnh3Y1UAAgTOrmVgAwQ8AAAA
                 url: http://weixin.qq.com/q/02rq7Al7orfk31oaLBxwc
+  /mp-qr-scan-status:
+    get:
+      tags:
+      - mp-qr
+      summary: Get the scanning status of qr code
+      operationId: mp-qr-scan-status
+      parameters:
+      - name: ticket
+        in: query
+        description: the ticket for the qr code to query scanning status
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: gQE48DwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyb2U4U2wwb3JmazMxcS1kQ3h3YzgAAgSCjWZgAwQ8AAAA
+      responses:
+        "200":
+          description: The scanning stqtus of qr code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MpQRScanStatus'
+              example:
+                openId: oWFvUw5ryWycy8XoDCy1pV0SiB58
+                status: SCANNED
 components:
   schemas:
     MpQR:
@@ -47,3 +73,12 @@ components:
         url:
           type: string
           example: http://weixin.qq.com/q/02rq7Al7orfk31oaLBxwc
+    MpQRScanStatus:
+      type: object
+      properties:
+        openId:
+          type: string
+          example: oWFvUw5ryWycy8XoDCy1pV0SiB58
+        status:
+          type: string
+          example: SCANNED
