@@ -1,0 +1,24 @@
+@startuml
+
+actor Browser as User
+participant ThisServer
+participant WechatServer
+
+User -> ThisServer : /hello
+note left : resource owner
+ThisServer -> User : Not allowed
+User -> ThisServer : /login
+ThisServer -> User : QR Code
+note right of ThisServer : As authorization server
+User -> User : Scans QR Code
+note left : Authorization by user
+WechatServer -> ThisServer: User Scanned
+ThisServer -> ThisServer : Record the scanned openid and ticket
+User -> ThisServer : Scan status of (ticket, openid)
+ThisServer -> ThisServer : Check ticket and openid if in record
+ThisServer -> User : Scanned, set cookie
+User -> ThisServer : /hello with cookie
+ThisServer -> User : success
+note right of ThisServer: render functioning page
+
+@enduml
