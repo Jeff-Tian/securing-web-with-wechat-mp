@@ -8,6 +8,7 @@ class SecuringWebWithWechatMpApplicationTests {
 
 	@Test
 	void contextLoads() {
+		System.out.println("This test method sould be run");
 	}
 
 }
