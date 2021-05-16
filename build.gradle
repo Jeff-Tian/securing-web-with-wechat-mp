@@ -21,6 +21,7 @@ dependencies {
     implementation "io.swagger.parser.v3:swagger-parser:2.0.20"
     implementation "org.openapitools:jackson-databind-nullable:0.2.1"
     implementation 'junit:junit:4.13.1'
+    implementation 'io.github.cdimascio:dotenv-java:2.2.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
