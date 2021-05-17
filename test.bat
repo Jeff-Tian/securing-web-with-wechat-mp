@@ -1,1 +1,1 @@
-.\gradlew.bat test --info
+./gradlew test --info
