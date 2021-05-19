@@ -27,7 +27,7 @@ public class MpService {
         } catch (Exception ex) {
             System.err.println("Exception = " + ex);
             ex.printStackTrace();
-            return new MpQR().ticket("test");
+            return new MpQR().ticket("error").imageUrl("https://avatars.githubusercontent.com/u/3367820?v=4");
         }
     }
 }
