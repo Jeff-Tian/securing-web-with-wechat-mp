@@ -23,6 +23,7 @@ dependencies {
     implementation 'junit:junit:4.13.1'
     implementation 'io.github.cdimascio:dotenv-java:2.2.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.cucumber:cucumber-java:6.8.0'

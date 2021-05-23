@@ -1,20 +1,41 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
 <head>
     <title>Spring Security Example </title>
 </head>
+
 <body>
-<div th:if="${param.error}">
-    Invalid username and password.
-</div>
-<div th:if="${param.logout}">
-    You have been logged out.
-</div>
-<form th:action="@{/login}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
+    <div th:if="${param.error}">
+        Invalid username and password.
+    </div>
+    <div th:if="${param.logout}">
+        You have been logged out.
+    </div>
+    <form th:action="@{/login}" method="post">
+        <div><label> User Name : <input type="text" name="username" /> </label></div>
+        <div><label> Password: <input type="password" name="password" /> </label></div>
+        <div><input type="submit" value="Sign In" /></div>
+    </form>
+    <div id="login-by-wechat">
+        <p>关注微信公众号直接登录：</p>
+        <img id="wechat-mp-qr" src="" alt="关注微信公众号直接登录" />
+    </div>
+    <script type="text/javascript">
+        var req = new XMLHttpRequest();
+        req.onreadystatechange = function () {
+            if (req.readyState === 4 && req.status === 200) {
+                console.log('url = ', req.responseText);
+                const json = JSON.parse(req.responseText);
+
+                document.getElementById('wechat-mp-qr').setAttribute('src', json.imageUrl);
+            }
+        }
+
+        req.open("GET", "/mp-qr", true); 
+        req.send();
+
+    </script>
 </body>
 </html>
