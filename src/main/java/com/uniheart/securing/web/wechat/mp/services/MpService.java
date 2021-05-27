@@ -13,17 +13,25 @@ import java.net.http.HttpResponse;
 @Component
 public class MpService {
     private final HttpClient httpClient;
+    private final String qrCodeCreateUrl;
 
     public MpService() {
         this.httpClient = HttpClient.newHttpClient();
+        this.qrCodeCreateUrl = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=TOKEN";
     }
 
     public MpService(HttpClient client) {
         this.httpClient = client;
+        this.qrCodeCreateUrl = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=TOKEN";
+    }
+
+    public MpService(String qrCodeCreateUrl) {
+        this.qrCodeCreateUrl = qrCodeCreateUrl;
+        this.httpClient = HttpClient.newHttpClient();
     }
 
     public MpQR getMpQrCode() {
-        URI uri = URI.create("https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=TOKEN");
+        URI uri = URI.create(this.qrCodeCreateUrl);
         HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString("")).uri(uri).build();
 
         try {
