@@ -18,6 +18,10 @@ public class MpService {
         this.httpClient = HttpClient.newHttpClient();
     }
 
+    public MpService(HttpClient client) {
+        this.httpClient = client;
+    }
+
     public MpQR getMpQrCode() {
         URI uri = URI.create("https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=TOKEN");
         HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString("")).uri(uri).build();

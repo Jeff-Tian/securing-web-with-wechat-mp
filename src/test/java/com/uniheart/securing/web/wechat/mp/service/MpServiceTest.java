@@ -4,16 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uniheart.securing.web.wechat.mp.services.MpService;
 import com.uniheart.wechatmpservice.models.MpQR;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class MpServiceTest {
-    @Autowired
-    private MpService mpService;
+    private MpService mpService = new MpService(new MockHttpClient());
 
     @Test
     void testGetMpQrCode() {
