@@ -1,6 +1,11 @@
 package com.uniheart.securing.web.wechat.mp;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uniheart.securing.web.wechat.mp.service.MockHttpClient;
+import com.uniheart.securing.web.wechat.mp.services.MpService;
 import io.github.cdimascio.dotenv.Dotenv;
+import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,11 +14,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.net.http.HttpClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,6 +40,18 @@ public class WechatMpApiControllerTest {
         mockBackEnd.shutdown();
     }
 
+    @BeforeEach
+    void initialize() {
+        String baseUrl = String.format("http://localhost:%s",
+                mockBackEnd.getPort());
+
+        mpService.setQrCodeCreateUrl(baseUrl + "/test");
+        mpService.setHttpClient(new MockHttpClient());
+    }
+
+    @Autowired
+    private MpService mpService;
+
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -40,7 +59,11 @@ public class WechatMpApiControllerTest {
     private Environment env;
 
     @Test
-    void testMpUrl() {
+    void testMpUrl() throws JsonProcessingException {
+        mockBackEnd.enqueue(new MockResponse()
+                .setBody(new ObjectMapper().writeValueAsString(null))
+                .addHeader("Content-Type", "application/json"));
+
         String jsonStr = "{\"expire_seconds\":null,\"imageUrl\":null,\"sceneId\":null,\"ticket\":\"test\",\"url\":null}";
         String content = this.restTemplate.getForObject("/mp-qr", String.class);
         assertThat(content).isEqualTo(jsonStr);

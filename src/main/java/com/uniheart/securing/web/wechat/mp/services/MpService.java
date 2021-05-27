@@ -12,8 +12,8 @@ import java.net.http.HttpResponse;
 
 @Component
 public class MpService {
-    private final HttpClient httpClient;
-    private final String qrCodeCreateUrl;
+    private HttpClient httpClient;
+    private String qrCodeCreateUrl;
 
     public MpService() {
         this.httpClient = HttpClient.newHttpClient();
@@ -28,6 +28,14 @@ public class MpService {
     public MpService(String qrCodeCreateUrl) {
         this.qrCodeCreateUrl = qrCodeCreateUrl;
         this.httpClient = HttpClient.newHttpClient();
+    }
+
+    public void setQrCodeCreateUrl(String url) {
+        this.qrCodeCreateUrl = url;
+    }
+
+    public void setHttpClient(HttpClient client) {
+        this.httpClient = client;
     }
 
     public MpQR getMpQrCode() {
