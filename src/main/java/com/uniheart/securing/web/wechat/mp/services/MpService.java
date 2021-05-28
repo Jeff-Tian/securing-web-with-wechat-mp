@@ -1,5 +1,6 @@
 package com.uniheart.securing.web.wechat.mp.services;
 
+import com.fasterxml.jackson.databind.ser.impl.UnknownSerializer;
 import com.google.gson.Gson;
 import com.uniheart.securing.web.wechat.mp.Constants;
 import com.uniheart.wechatmpservice.models.MpQR;
@@ -9,6 +10,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.UnknownFormatConversionException;
 
 @Component
 public class MpService {
@@ -43,15 +45,19 @@ public class MpService {
         HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString("")).uri(uri).build();
 
         try {
-            HttpResponse response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Response = " + response.body().toString());
-            WeixinErrorResponse res = new Gson().fromJson(response.body().toString(), WeixinErrorResponse.class);
+            HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            WeixinErrorResponse errorResponse = new Gson().fromJson(response.body(), WeixinErrorResponse.class);
+            WeixinTicketResponse ticketResponse = new Gson().fromJson(response.body(), WeixinTicketResponse.class);
 
-            if (res.errcode == (40001)) {
-                return new MpQR().ticket("test").imageUrl(Constants.FALLBACK_QR_URL);
-            } else {
-                return new MpQR().ticket("test");
+            if(!ticketResponse.ticket.equals("")){
+                return new MpQR().ticket(ticketResponse.ticket).imageUrl(ticketResponse.url).expireSeconds(ticketResponse.expiresInSeconds).url(ticketResponse.url);
             }
+
+            if (errorResponse.errcode == (40001)) {
+                return new MpQR().ticket("test").imageUrl(Constants.FALLBACK_QR_URL);
+            }
+
+            throw new UnknownFormatConversionException(response.body());
         } catch (Exception ex) {
             System.err.println("Exception = " + ex);
             ex.printStackTrace();

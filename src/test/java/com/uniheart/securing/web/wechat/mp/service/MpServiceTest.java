@@ -11,12 +11,12 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class MpServiceTest {
-    private MpService mpService = new MpService(new MockHttpClient());
+    private final MpService mpService = new MpService(new MockHttpClient());
 
     @Test
     void testGetMpQrCode() {
         MpQR mpQR = mpService.getMpQrCode();
-        assertThat(mpQR.getTicket()).isEqualTo("test");
+        assertThat(mpQR.getTicket()).isEqualTo("error");
     }
 
     @Test
