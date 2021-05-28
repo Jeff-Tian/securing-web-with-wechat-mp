@@ -3,6 +3,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.openapi.generator' version "4.3.1"
     id 'java'
+
+    id "org.sonarqube" version "3.2.0"
 }
 
 group = 'com.uniheart'
@@ -55,3 +57,11 @@ openApiGenerate {
 compileJava.dependsOn tasks.openApiGenerate
 sourceSets.main.java.srcDir "$buildDir/generated/src/main/java"
 sourceSets.main.resources.srcDir "$buildDir/generated/src/main/resources"
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "Jeff-Tian_securing-web-with-wechat-mp"
+        property "sonar.organization", "jeff-tian-github"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
+}
