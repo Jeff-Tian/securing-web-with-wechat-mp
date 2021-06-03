@@ -49,7 +49,7 @@ public class MpService {
             WeixinErrorResponse errorResponse = new Gson().fromJson(response.body(), WeixinErrorResponse.class);
             WeixinTicketResponse ticketResponse = new Gson().fromJson(response.body(), WeixinTicketResponse.class);
 
-            if(!ticketResponse.ticket.equals("")){
+            if (!ticketResponse.ticket.equals("")) {
                 return new MpQR().ticket(ticketResponse.ticket).imageUrl(ticketResponse.url).expireSeconds(ticketResponse.expiresInSeconds).url(ticketResponse.url);
             }
 
@@ -58,6 +58,11 @@ public class MpService {
             }
 
             throw new UnknownFormatConversionException(response.body());
+        }catch(InterruptedException ie){
+            System.err.println("Exception = " + ie);
+            ie.printStackTrace();
+
+            return new MpQR().ticket("interrupted").imageUrl(Constants.FALLBACK_QR_URL);
         } catch (Exception ex) {
             System.err.println("Exception = " + ex);
             ex.printStackTrace();
