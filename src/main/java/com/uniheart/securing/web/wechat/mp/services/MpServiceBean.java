@@ -13,21 +13,21 @@ import java.net.http.HttpResponse;
 import java.util.UnknownFormatConversionException;
 
 @Component
-public class MpService {
+public class MpServiceBean {
     private HttpClient httpClient;
     private String qrCodeCreateUrl;
 
-    public MpService() {
+    public MpServiceBean() {
         this.httpClient = HttpClient.newHttpClient();
         this.qrCodeCreateUrl = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=TOKEN";
     }
 
-    public MpService(HttpClient client) {
+    public MpServiceBean(HttpClient client) {
         this.httpClient = client;
         this.qrCodeCreateUrl = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=TOKEN";
     }
 
-    public MpService(String qrCodeCreateUrl) {
+    public MpServiceBean(String qrCodeCreateUrl) {
         this.qrCodeCreateUrl = qrCodeCreateUrl;
         this.httpClient = HttpClient.newHttpClient();
     }

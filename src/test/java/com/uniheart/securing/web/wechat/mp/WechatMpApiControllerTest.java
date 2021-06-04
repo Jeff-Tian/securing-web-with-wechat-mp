@@ -1,7 +1,6 @@
 package com.uniheart.securing.web.wechat.mp;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.uniheart.securing.web.wechat.mp.services.MpService;
+import com.uniheart.securing.web.wechat.mp.services.MpServiceBean;
 import io.github.cdimascio.dotenv.Dotenv;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -41,11 +40,11 @@ public class WechatMpApiControllerTest {
         String baseUrl = String.format("http://localhost:%s",
                 mockBackEnd.getPort());
 
-        mpService.setQrCodeCreateUrl(baseUrl + "/test");
+        mpServiceBean.setQrCodeCreateUrl(baseUrl + "/test");
     }
 
     @Autowired
-    private MpService mpService;
+    private MpServiceBean mpServiceBean;
 
     @Autowired
     private TestRestTemplate restTemplate;

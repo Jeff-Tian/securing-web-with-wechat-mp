@@ -1,9 +1,8 @@
 package com.uniheart.securing.web.wechat.mp.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.uniheart.securing.web.wechat.mp.services.MpService;
+import com.uniheart.securing.web.wechat.mp.services.MpServiceBean;
 import com.uniheart.wechatmpservice.models.MpQR;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -19,12 +18,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class MpServiceTest {
-    private MpService mpService = new MpService(new MockHttpClient());
+public class MpServiceBeanTest {
+    private MpServiceBean mpServiceBean = new MpServiceBean(new MockHttpClient());
 
     @Test
     void testGetMpQrCode() {
-        MpQR mpQR = mpService.getMpQrCode();
+        MpQR mpQR = mpServiceBean.getMpQrCode();
         assertThat(mpQR.getTicket()).isEqualTo("error");
     }
 
@@ -42,8 +41,8 @@ public class MpServiceTest {
     void testGetMpQrCodeMetInterruptedException() throws IOException, InterruptedException {
         when(mockHttpClient.send(any(), any())).thenThrow(new InterruptedException("Test Exception"));
 
-        mpService = new MpService(mockHttpClient);
-        MpQR mpQR = mpService.getMpQrCode();
+        mpServiceBean = new MpServiceBean(mockHttpClient);
+        MpQR mpQR = mpServiceBean.getMpQrCode();
         assertThat(mpQR.getTicket()).isEqualTo("interrupted");
     }
 
@@ -52,7 +51,6 @@ public class MpServiceTest {
 
     @BeforeEach
     void setup() {
-        System.out.println("Beforeing...");
-        MockitoAnnotations.initMocks(MpServiceTest.class);
+        MockitoAnnotations.initMocks(MpServiceBeanTest.class);
     }
 }
