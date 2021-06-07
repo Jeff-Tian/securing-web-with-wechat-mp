@@ -29,13 +29,9 @@ public class MpServiceBean {
         this.httpClient = HttpClient.newHttpClient();
     }
 
-    public MpServiceBean(HttpClient client) {
+    public MpServiceBean(HttpClient client, String qrCodeCreateUrl) {
         this.httpClient = client;
-    }
-
-    public MpServiceBean(String qrCodeCreateUrl) {
         this.qrCodeCreateUrl = qrCodeCreateUrl;
-        this.httpClient = HttpClient.newHttpClient();
     }
 
     public void setQrCodeCreateUrl(String url) {
@@ -51,7 +47,7 @@ public class MpServiceBean {
             WeixinErrorResponse errorResponse = new Gson().fromJson(response.body(), WeixinErrorResponse.class);
             WeixinTicketResponse ticketResponse = new Gson().fromJson(response.body(), WeixinTicketResponse.class);
 
-            if (!ticketResponse.ticket.equals("")) {
+            if (ticketResponse.ticket != null) {
                 return new MpQR().ticket(ticketResponse.ticket).imageUrl(ticketResponse.url).expireSeconds(ticketResponse.expiresInSeconds).url(ticketResponse.url);
             }
 

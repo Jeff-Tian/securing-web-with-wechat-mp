@@ -7,7 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -17,9 +19,13 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@TestPropertySource(locations = "/application.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class MpServiceBeanTest {
-    private MpServiceBean mpServiceBean = new MpServiceBean(new MockHttpClient());
+    @Value("${weixin-qr-code-creation-endpoint}")
+    private String testingEndpoint;
+
+    private MpServiceBean mpServiceBean;
 
     @Test
     void testGetMpQrCode() {
@@ -41,7 +47,6 @@ public class MpServiceBeanTest {
     void testGetMpQrCodeMetInterruptedException() throws IOException, InterruptedException {
         when(mockHttpClient.send(any(), any())).thenThrow(new InterruptedException("Test Exception"));
 
-        mpServiceBean = new MpServiceBean(mockHttpClient);
         MpQR mpQR = mpServiceBean.getMpQrCode();
         assertThat(mpQR.getTicket()).isEqualTo("interrupted");
     }
@@ -51,6 +56,7 @@ public class MpServiceBeanTest {
 
     @BeforeEach
     void setup() {
+        this.mpServiceBean = new MpServiceBean(this.mockHttpClient, this.testingEndpoint);
         MockitoAnnotations.initMocks(MpServiceBeanTest.class);
     }
 }
