@@ -1,3 +1,6 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+
 plugins {
     id 'org.springframework.boot' version '2.4.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -65,3 +68,21 @@ sonarqube {
         property "sonar.host.url", "https://sonarcloud.io"
     }
 }
+
+task installGitHooks(type: Copy) {
+    def suffix = "macos"
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        suffix = "windows"
+    }
+    from new File(rootProject.rootDir, "scripts/pre-commit-$suffix")
+    into { new File(rootProject.rootDir, '.git/hooks') }
+    rename("pre-commit-$suffix", 'pre-commit')
+
+    from new File(rootProject.rootDir, "scripts/pre-push-$suffix")
+    into { new File(rootProject.rootDir, '.git/hooks') }
+    rename("pre-push-$suffix", 'pre-push')
+
+    fileMode 0775
+}
+
+tasks.getByPath(':build').dependsOn installGitHooks
