@@ -59,18 +59,14 @@ public class WechatMpApiControllerTest {
                 "3sUw==\",\"expire_seconds\":60,\"url\":\"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI\"}");
         mockResponse.addHeader("Content-Type", "application/json");
 
-        System.out.println("Mocked: " + mockBackEnd.getPort());
-        System.out.println("request count = " + mockBackEnd.getRequestCount());
         mockBackEnd.enqueue(mockResponse);
+        assertThat(mockBackEnd.getRequestCount()).isEqualTo(0);
 
         String jsonStr = "{\"expire_seconds\":60,\"imageUrl\":\"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI\",\"sceneId\":null,\"ticket\":\"gQH47joAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2taZ2Z3TVRtNzJXV1Brb3ZhYmJJAAIEZ23sUwMEmm\\n3sUw==\",\"url\":\"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI\"}";
         String content = this.restTemplate.getForObject("/mp-qr", String.class);
 
-        System.out.println("request count now = " + mockBackEnd.getRequestCount());
-
+        assertThat(mockBackEnd.getRequestCount()).isEqualTo(1);
         assertThat(content).isEqualTo(jsonStr);
-
-
     }
 
     @Test

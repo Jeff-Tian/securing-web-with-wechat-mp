@@ -1,5 +1,6 @@
 package com.uniheart.securing.web.wechat.mp.services;
 
+import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,7 +14,6 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class MpTokenManagerTest {
     public static MockWebServer mockBackEnd;
 
@@ -28,12 +28,23 @@ class MpTokenManagerTest {
         mockBackEnd.shutdown();
     }
 
-    @Autowired
     private MpTokenManager mpTokenManager;
 
     @Test
-    void testGetAccessTokenSuccess() {
-        WeixinTokenResponse res = this.mpTokenManager.getAccessToken();
-        assertThat(res.accessToken).isEqualTo("access");
+    void testGetAccessTokenFail() {
+        MockResponse mockResponse = new MockResponse();
+        mockResponse.setBody("{\"errcode\":40013,\"errmsg\":\"invalid appid\"}");
+        mockResponse.addHeader("Content-Type", "application/json");
+
+        mockBackEnd.enqueue(mockResponse);
+        assertThat(mockBackEnd.getRequestCount()).isEqualTo(0);
+
+        this.mpTokenManager = new MpTokenManager(String.format("http://localhost:%s",
+                mockBackEnd.getPort()));
+
+        var res = this.mpTokenManager.getAccessToken();
+
+        assertThat(mockBackEnd.getRequestCount()).isEqualTo(1);
+        assertThat(res.accessToken).isEqualTo("40013:invalid appid");
     }
 }
