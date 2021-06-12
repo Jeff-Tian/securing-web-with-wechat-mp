@@ -47,4 +47,19 @@ class MpTokenManagerTest {
         assertThat(mockBackEnd.getRequestCount()).isEqualTo(1);
         assertThat(res.accessToken).isEqualTo("40013:invalid appid");
     }
+
+    @Test
+    void testGetAccessTokenSuccess() {
+        var mockResponse = new MockResponse();
+        mockResponse.setBody("{\"access_token\":\"ACCESS_TOKEN\",\"expires_in\":7200}");
+        mockResponse.addHeader("Content-Type", "application/json");
+
+        mockBackEnd.enqueue(mockResponse);
+
+        this.mpTokenManager = new MpTokenManager(String.format("http://localhost:%s", mockBackEnd.getPort()));
+
+        var res = this.mpTokenManager.getAccessToken();
+
+        assertThat(res.accessToken).isEqualTo("ACCESS_TOKEN");
+    }
 }
