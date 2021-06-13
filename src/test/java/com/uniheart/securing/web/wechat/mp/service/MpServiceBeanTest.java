@@ -2,6 +2,7 @@ package com.uniheart.securing.web.wechat.mp.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uniheart.securing.web.wechat.mp.services.MpServiceBean;
+import com.uniheart.securing.web.wechat.mp.services.MpTokenManager;
 import com.uniheart.wechatmpservice.models.MpQR;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
@@ -24,6 +26,9 @@ import static org.mockito.Mockito.when;
 public class MpServiceBeanTest {
     @Value("${weixin-qr-code-creation-endpoint}")
     private String testingEndpoint;
+
+    @Value("${weixin-token-endpoint}")
+    private String testingTokenEndpoint;
 
     private MpServiceBean mpServiceBean;
 
@@ -56,7 +61,7 @@ public class MpServiceBeanTest {
 
     @BeforeEach
     void setup() {
-        this.mpServiceBean = new MpServiceBean(this.mockHttpClient, this.testingEndpoint);
+        this.mpServiceBean = new MpServiceBean(this.mockHttpClient, this.testingEndpoint, this.testingTokenEndpoint);
         MockitoAnnotations.initMocks(MpServiceBeanTest.class);
     }
 }

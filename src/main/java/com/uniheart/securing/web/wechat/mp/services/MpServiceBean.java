@@ -1,9 +1,9 @@
 package com.uniheart.securing.web.wechat.mp.services;
 
-import com.fasterxml.jackson.databind.ser.impl.UnknownSerializer;
 import com.google.gson.Gson;
 import com.uniheart.securing.web.wechat.mp.Constants;
 import com.uniheart.wechatmpservice.models.MpQR;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,11 +17,13 @@ import java.util.UnknownFormatConversionException;
 public class MpServiceBean {
     private HttpClient httpClient;
 
-    @Value("${weixin-qr-code-creation-endpoint:test}")
+    @Value("${weixin-qr-code-creation-endpoint:default-test-value}")
     private String qrCodeCreateUrl;
 
-    public String getQrCodeCreateUrl()
-    {
+    @Value("${weixin-token-endpoint:default-test-value}")
+    private String weixinAccessTokenEndpoint;
+
+    public String getQrCodeCreateUrl() {
         return this.qrCodeCreateUrl;
     }
 
@@ -29,9 +31,10 @@ public class MpServiceBean {
         this.httpClient = HttpClient.newHttpClient();
     }
 
-    public MpServiceBean(HttpClient client, String qrCodeCreateUrl) {
+    public MpServiceBean(HttpClient client, String qrCodeCreateUrl, String tokenEndpoint) {
         this.httpClient = client;
         this.qrCodeCreateUrl = qrCodeCreateUrl;
+        this.weixinAccessTokenEndpoint = tokenEndpoint;
     }
 
     public void setQrCodeCreateUrl(String url) {
@@ -39,7 +42,9 @@ public class MpServiceBean {
     }
 
     public MpQR getMpQrCode() {
-        URI uri = URI.create(this.qrCodeCreateUrl);
+        var mpTokenManager = new MpTokenManager(this.weixinAccessTokenEndpoint);
+
+        URI uri = URI.create(this.qrCodeCreateUrl + mpTokenManager.getAccessToken());
         HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString("")).uri(uri).build();
 
         try {

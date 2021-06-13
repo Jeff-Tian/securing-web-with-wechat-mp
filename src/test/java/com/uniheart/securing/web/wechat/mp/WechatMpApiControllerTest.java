@@ -1,6 +1,7 @@
 package com.uniheart.securing.web.wechat.mp;
 
 import com.uniheart.securing.web.wechat.mp.services.MpServiceBean;
+import com.uniheart.securing.web.wechat.mp.services.MpTokenManager;
 import io.github.cdimascio.dotenv.Dotenv;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -41,10 +42,15 @@ public class WechatMpApiControllerTest {
                 mockBackEnd.getPort());
 
         mpServiceBean.setQrCodeCreateUrl(baseUrl + "/test");
+
+        mpTokenManager = new MpTokenManager(baseUrl + "/token");
     }
 
     @Autowired
     private MpServiceBean mpServiceBean;
+
+    @Autowired
+    private MpTokenManager mpTokenManager;
 
     @Autowired
     private TestRestTemplate restTemplate;

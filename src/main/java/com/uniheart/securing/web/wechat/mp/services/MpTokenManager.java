@@ -13,7 +13,7 @@ import java.net.http.HttpResponse;
 public class MpTokenManager {
     private final String weixinTokenEndpoint;
 
-    public MpTokenManager(@Value("${weixin-token-endpoint}") String weixinTokenEndpoint) {
+    public MpTokenManager(@Value("${weixin-token-endpoint:default-test-value}") String weixinTokenEndpoint) {
         this.weixinTokenEndpoint = weixinTokenEndpoint;
     }
 
