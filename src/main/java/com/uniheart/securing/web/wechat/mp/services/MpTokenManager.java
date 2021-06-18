@@ -1,6 +1,8 @@
 package com.uniheart.securing.web.wechat.mp.services;
 
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +15,10 @@ import java.net.http.HttpResponse;
 public class MpTokenManager {
     private final String weixinTokenEndpoint;
 
+    Logger logger = LoggerFactory.getLogger(MpTokenManager.class);
+
     public MpTokenManager(@Value("${weixin-token-endpoint:default-test-value}") String weixinTokenEndpoint) {
+        logger.info("endpoint = ", weixinTokenEndpoint);
         this.weixinTokenEndpoint = weixinTokenEndpoint;
     }
 
