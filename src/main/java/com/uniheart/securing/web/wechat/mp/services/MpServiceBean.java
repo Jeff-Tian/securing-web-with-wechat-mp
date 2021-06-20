@@ -47,7 +47,7 @@ public class MpServiceBean {
     public MpQR getMpQrCode() {
         var mpTokenManager = new MpTokenManager(this.weixinAccessTokenEndpoint);
 
-        URI uri = URI.create(this.qrCodeCreateUrl + mpTokenManager.getAccessToken());
+        URI uri = URI.create(this.qrCodeCreateUrl + mpTokenManager.getAccessToken().accessToken);
 
         logger.info("Getting qr code with " + uri);
 
