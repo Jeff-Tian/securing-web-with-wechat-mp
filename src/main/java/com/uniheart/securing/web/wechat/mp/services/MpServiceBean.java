@@ -3,7 +3,8 @@ package com.uniheart.securing.web.wechat.mp.services;
 import com.google.gson.Gson;
 import com.uniheart.securing.web.wechat.mp.Constants;
 import com.uniheart.wechatmpservice.models.MpQR;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -41,10 +42,15 @@ public class MpServiceBean {
         this.qrCodeCreateUrl = url;
     }
 
+    Logger logger = LoggerFactory.getLogger(MpServiceBean.class);
+
     public MpQR getMpQrCode() {
         var mpTokenManager = new MpTokenManager(this.weixinAccessTokenEndpoint);
 
         URI uri = URI.create(this.qrCodeCreateUrl + mpTokenManager.getAccessToken());
+
+        logger.info("Getting qr code with " + uri);
+
         HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString("")).uri(uri).build();
 
         try {
