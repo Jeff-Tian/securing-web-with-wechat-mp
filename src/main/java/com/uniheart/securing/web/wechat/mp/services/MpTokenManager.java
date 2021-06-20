@@ -18,7 +18,7 @@ public class MpTokenManager {
     Logger logger = LoggerFactory.getLogger(MpTokenManager.class);
 
     public MpTokenManager(@Value("${weixin-token-endpoint:default-test-value}") String weixinTokenEndpoint) {
-        logger.info("endpoint = ", weixinTokenEndpoint);
+        logger.info("endpoint = " + weixinTokenEndpoint, weixinTokenEndpoint);
         this.weixinTokenEndpoint = weixinTokenEndpoint;
     }
 
