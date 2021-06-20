@@ -1,6 +1,7 @@
 package com.uniheart.securing.web.wechat.mp.services;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.uniheart.securing.web.wechat.mp.Constants;
 import com.uniheart.wechatmpservice.models.MpQR;
 import org.slf4j.Logger;
@@ -51,7 +52,8 @@ public class MpServiceBean {
 
         logger.info("Getting qr code with " + uri);
 
-        HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString("")).uri(uri).build();
+        HttpRequest request =
+                HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString("")).uri(uri).build();
 
         try {
             HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
