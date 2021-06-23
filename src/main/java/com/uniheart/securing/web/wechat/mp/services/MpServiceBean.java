@@ -17,7 +17,7 @@ import java.util.UnknownFormatConversionException;
 
 @Component
 public class MpServiceBean {
-    private HttpClient httpClient;
+    private final HttpClient httpClient;
 
     @Value("${weixin-qr-code-creation-endpoint:default-test-value}")
     private String qrCodeCreateUrl;
@@ -56,8 +56,10 @@ public class MpServiceBean {
 
         logger.info("Getting qr code with " + uri);
 
+        var payload = WeixinQrCodeRequestPayload.getRandomInstance();
+
         HttpRequest request =
-                HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(WeixinQrCodeRequestPayload.getRandomInstance().toJson())).uri(uri).build();
+                HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(payload.toJson())).uri(uri).build();
 
         try {
             HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -65,7 +67,7 @@ public class MpServiceBean {
             WeixinTicketResponse ticketResponse = new Gson().fromJson(response.body(), WeixinTicketResponse.class);
 
             if (ticketResponse.ticket != null) {
-                return new MpQR().ticket(ticketResponse.ticket).imageUrl(ticketResponse.url).expireSeconds(ticketResponse.expiresInSeconds).url(ticketResponse.url);
+                return new MpQR().ticket(ticketResponse.ticket).imageUrl(ticketResponse.url).expireSeconds(ticketResponse.expiresInSeconds).url(ticketResponse.url).sceneId(String.valueOf(payload.action_info.scene.scene_id));
             }
 
             if (errorResponse.errcode == (40001)) {

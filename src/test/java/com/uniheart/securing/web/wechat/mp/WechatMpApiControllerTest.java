@@ -2,6 +2,7 @@ package com.uniheart.securing.web.wechat.mp;
 
 import com.uniheart.securing.web.wechat.mp.services.MpServiceBean;
 import com.uniheart.securing.web.wechat.mp.services.MpTokenManager;
+import com.uniheart.securing.web.wechat.mp.services.WeixinTicketResponse;
 import io.github.cdimascio.dotenv.Dotenv;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -15,9 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -65,8 +64,7 @@ public class WechatMpApiControllerTest {
         mockResponseForToken.setBody("{\"access_token\":\"ACCESS_TOKEN\",\"expires_in\":7200}");
 
         MockResponse mockResponse = new MockResponse();
-        mockResponse.setBody("{\"ticket\":\"gQH47joAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2taZ2Z3TVRtNzJXV1Brb3ZhYmJJAAIEZ23sUwMEmm\n" +
-                "3sUw==\",\"expire_seconds\":60,\"url\":\"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI\"}");
+        mockResponse.setBody("{\"ticket\":\"ticket\",\"expire_seconds\":60,\"url\":\"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI\"}");
         mockResponse.addHeader("Content-Type", "application/json");
 
         mockBackEnd.enqueue(mockResponseForToken);
@@ -74,11 +72,11 @@ public class WechatMpApiControllerTest {
         mockBackEnd.enqueue(mockResponse);
         assertThat(mockBackEnd.getRequestCount()).isEqualTo(0);
 
-        String jsonStr = "{\"expire_seconds\":60,\"imageUrl\":\"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI\",\"sceneId\":null,\"ticket\":\"gQH47joAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2taZ2Z3TVRtNzJXV1Brb3ZhYmJJAAIEZ23sUwMEmm\\n3sUw==\",\"url\":\"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI\"}";
-        String content = this.restTemplate.getForObject("/mp-qr", String.class);
+        var content = this.restTemplate.getForObject("/mp-qr", WeixinTicketResponse.class);
 
         assertThat(mockBackEnd.getRequestCount()).isEqualTo(2);
-        assertThat(content).isEqualTo(jsonStr);
+        assertThat(content.url).isEqualTo("http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI");
+        assertThat(content.ticket).isEqualTo("ticket");
     }
 
     @Test
