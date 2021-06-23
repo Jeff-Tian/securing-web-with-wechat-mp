@@ -2,7 +2,6 @@ package com.uniheart.securing.web.wechat.mp.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uniheart.securing.web.wechat.mp.services.MpServiceBean;
-import com.uniheart.securing.web.wechat.mp.services.MpTokenManager;
 import com.uniheart.wechatmpservice.models.MpQR;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;

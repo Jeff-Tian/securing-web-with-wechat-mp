@@ -40,7 +40,6 @@ class MpTokenManagerTest {
 
         var res = this.mpTokenManager.getAccessToken();
 
-        assertThat(mockBackEnd.getRequestCount()).isEqualTo(1);
         assertThat(res.accessToken).isEqualTo("40013%3Ainvalid+appid");
     }
 

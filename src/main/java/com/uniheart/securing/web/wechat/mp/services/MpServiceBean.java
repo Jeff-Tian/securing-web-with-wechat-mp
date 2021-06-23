@@ -57,7 +57,7 @@ public class MpServiceBean {
         logger.info("Getting qr code with " + uri);
 
         HttpRequest request =
-                HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString("")).uri(uri).build();
+                HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(WeixinQrCodeRequestPayload.getRandomInstance().toJson())).uri(uri).build();
 
         try {
             HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
