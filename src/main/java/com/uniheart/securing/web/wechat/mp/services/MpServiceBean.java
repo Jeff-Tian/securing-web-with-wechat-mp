@@ -43,6 +43,10 @@ public class MpServiceBean {
         this.qrCodeCreateUrl = url;
     }
 
+    public void setWeixinAccessTokenEndpoint(String url) {
+        this.weixinAccessTokenEndpoint = url;
+    }
+
     Logger logger = LoggerFactory.getLogger(MpServiceBean.class);
 
     public MpQR getMpQrCode() {

@@ -42,6 +42,7 @@ public class WechatMpApiControllerTest {
                 mockBackEnd.getPort());
 
         mpServiceBean.setQrCodeCreateUrl(baseUrl + "/test");
+        mpServiceBean.setWeixinAccessTokenEndpoint(baseUrl + "/test2");
 
         mpTokenManager = new MpTokenManager(baseUrl + "/token");
     }
@@ -60,10 +61,15 @@ public class WechatMpApiControllerTest {
 
     @Test
     void testMpUrlHappyPath() {
+        var mockResponseForToken = new MockResponse();
+        mockResponseForToken.setBody("{\"access_token\":\"ACCESS_TOKEN\",\"expires_in\":7200}");
+
         MockResponse mockResponse = new MockResponse();
         mockResponse.setBody("{\"ticket\":\"gQH47joAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2taZ2Z3TVRtNzJXV1Brb3ZhYmJJAAIEZ23sUwMEmm\n" +
                 "3sUw==\",\"expire_seconds\":60,\"url\":\"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI\"}");
         mockResponse.addHeader("Content-Type", "application/json");
+
+        mockBackEnd.enqueue(mockResponseForToken);
 
         mockBackEnd.enqueue(mockResponse);
         assertThat(mockBackEnd.getRequestCount()).isEqualTo(0);
@@ -71,7 +77,7 @@ public class WechatMpApiControllerTest {
         String jsonStr = "{\"expire_seconds\":60,\"imageUrl\":\"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI\",\"sceneId\":null,\"ticket\":\"gQH47joAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2taZ2Z3TVRtNzJXV1Brb3ZhYmJJAAIEZ23sUwMEmm\\n3sUw==\",\"url\":\"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI\"}";
         String content = this.restTemplate.getForObject("/mp-qr", String.class);
 
-        assertThat(mockBackEnd.getRequestCount()).isEqualTo(1);
+        assertThat(mockBackEnd.getRequestCount()).isEqualTo(2);
         assertThat(content).isEqualTo(jsonStr);
     }
 

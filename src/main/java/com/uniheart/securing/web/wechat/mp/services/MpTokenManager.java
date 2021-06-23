@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -34,7 +35,7 @@ public class MpTokenManager {
             WeixinErrorResponse errorResponse = new Gson().fromJson(response.body(), WeixinErrorResponse.class);
 
             if (errorResponse.errcode != 0) {
-                tokenResponse.accessToken = errorResponse.errcode + ":" + errorResponse.errmsg;
+                tokenResponse.accessToken = URLEncoder.encode(errorResponse.errcode + ":" + errorResponse.errmsg);
             }
 
             return tokenResponse;
