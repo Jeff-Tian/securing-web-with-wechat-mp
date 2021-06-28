@@ -52,6 +52,22 @@ paths:
               example:
                 openId: oWFvUw5ryWycy8XoDCy1pV0SiB58
                 status: SCANNED
+  /mp-message:
+    post:
+      tags:
+      - mp-qr
+      summary: Receive xml messages sent from wechat mp server
+      operationId: mp-message
+      requestBody:
+        description: wechat mp messages in xml format
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/xml'
+        required: true
+      responses:
+        "200":
+          description: the message was well received
 components:
   schemas:
     MpQR:
@@ -82,3 +98,24 @@ components:
         status:
           type: string
           example: SCANNED
+    xml:
+      type: object
+      properties:
+        ToUserName:
+          type: string
+          example: oWfv
+        FromUserName:
+          type: string
+          example: "1234"
+        CreateTime:
+          type: number
+          example: 1357290913
+        MsgType:
+          type: string
+          example: Text
+        Content:
+          type: string
+          example: hello
+        MsgId:
+          type: number
+          example: 123456789
