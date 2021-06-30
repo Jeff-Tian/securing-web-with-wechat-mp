@@ -22,6 +22,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/home").permitAll()
                 .antMatchers("/mp-qr", "/mp-qr").permitAll()
                 .antMatchers("/mp-qr-scan-status", "/mp-qr-scan-status").permitAll()
+                .antMatchers("/mp-message", "/mp-message").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
