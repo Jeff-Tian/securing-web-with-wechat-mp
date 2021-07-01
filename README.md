@@ -8,7 +8,8 @@ securing-web-with-wechat-mp
 
 ## API Spec
 
-https://app.swaggerhub.com/apis/UniHeart/wechat-mp/
+- https://app.swaggerhub.com/apis/UniHeart/wechat-mp/
+- https://wechat-mp.herokuapp.com/v3/api-docs
 
 Design api spec in the above link first.
 
@@ -22,7 +23,8 @@ To generate the api models and api mappings to the build folder, and then write 
 
 ```java
 @RestController
-public final class ImplementController implements GeneratedApiController {
+public final class ImplementController implements GeneratedApiController
+{
     
     @Override
     xxxMethod() {

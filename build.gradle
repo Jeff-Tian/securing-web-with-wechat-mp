@@ -1,6 +1,5 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
-
 plugins {
     id 'org.springframework.boot' version '2.4.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -13,6 +12,7 @@ plugins {
 group = 'com.uniheart'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+def pulsarVersion = '2.6.3'
 
 repositories {
     mavenCentral()
@@ -31,6 +31,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'org.springdoc:springdoc-openapi-ui:1.5.2'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.1'
+    implementation 'org.apache.pulsar:pulsar-client:2.6.3'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.cucumber:cucumber-java:6.8.0'
