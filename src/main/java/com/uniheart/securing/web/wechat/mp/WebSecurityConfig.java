@@ -3,6 +3,7 @@ package com.uniheart.securing.web.wechat.mp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,7 +23,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/home").permitAll()
                 .antMatchers("/mp-qr", "/mp-qr").permitAll()
                 .antMatchers("/mp-qr-scan-status", "/mp-qr-scan-status").permitAll()
-                .antMatchers("/mp-message", "/mp-message").permitAll()
+                .antMatchers(HttpMethod.POST, "/mp-message").permitAll()
+                .antMatchers("/v3/api-docs", "/v3/api-docs").permitAll()
+                .antMatchers("/swagger-ui", "/swagger-ui").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -31,6 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .permitAll();
+
+        http.csrf().disable();
     }
 
     @Autowired

@@ -14,6 +14,6 @@ import javax.validation.Valid;
 public class WechatMessageController implements MpMessageApi {
     @Override
     public ResponseEntity<Void> mpMessage(@ApiParam(value = "wechat mp messages in xml format", required = true) @Valid @RequestBody Xml xml) {
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
