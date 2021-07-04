@@ -17,5 +17,7 @@ public final class WechatMpApiController implements MpQrApi {
     public ResponseEntity<MpQR> mpQrUrl() {
         return new ResponseEntity<>(this.mpServiceBean.getMpQrCode(), HttpStatus.OK);
     }
+
+
 }
 
