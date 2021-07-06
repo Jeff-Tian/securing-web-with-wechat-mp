@@ -23,19 +23,40 @@
         <img id="wechat-mp-qr" src="" alt="关注微信公众号直接登录" />
     </div>
     <script type="text/javascript">
-        var req = new XMLHttpRequest();
-        req.onreadystatechange = function () {
-            if (req.readyState === 4 && req.status === 200) {
-                console.log('url = ', req.responseText);
-                const json = JSON.parse(req.responseText);
+        function queryScanStatus(ticket) {
+            var req = new XMLHttpRequest();
 
-                document.getElementById('wechat-mp-qr').setAttribute('src', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + encodeURIComponent(json.ticket));
-            }
+            req.onreadystatechange = function () {
+                if(req.readyState === 4 && req.status === 200) {
+                    console.log('res = ', req.responseText);
+                    const json = JSON.parse(req.responseText);
+
+                    
+                }
+            };
+
+            req.open("GET", "/mp-qr-scan-status?ticket=" + ticket);
+            req.send();
         }
 
-        req.open("GET", "/mp-qr", true); 
-        req.send();
+        function showQRCodeImage() {
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function () {
+                if (req.readyState === 4 && req.status === 200) {
+                    console.log('url = ', req.responseText);
+                    const json = JSON.parse(req.responseText);
 
+                    document.getElementById('wechat-mp-qr').setAttribute('src', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + encodeURIComponent(json.ticket));
+
+                    queryScanStatus(json.ticket);
+                }
+            };
+
+            req.open("GET", "/mp-qr", true);
+            req.send();
+        }
+
+        showQRCodeImage();
     </script>
 </body>
 </html>
