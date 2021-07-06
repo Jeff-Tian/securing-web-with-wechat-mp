@@ -113,9 +113,12 @@ components:
         MsgType:
           type: string
           example: Text
-        Content:
+        Event:
           type: string
-          example: hello
-        MsgId:
-          type: number
-          example: 123456789
+          example: subscribe
+        EventKey:
+          type: string
+          example: qrscene_123123
+        Ticket:
+          type: string
+          example: TICKET
