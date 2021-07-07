@@ -17,6 +17,11 @@ public final class WechatMpQRScanStatusApiController implements MpQrScanStatusAp
 
     @Override
     public ResponseEntity<MpQRScanStatus> mpQrScanStatus(String ticket) {
-        return new ResponseEntity<>(new MpQRScanStatus().openId("1234"), HttpStatus.OK);
+        try {
+            var xml = this.mpMessageService.getMessageFor(ticket);
+            return new ResponseEntity<>(new MpQRScanStatus().openId(xml.getFromUserName()).status("SCANNED"), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new MpQRScanStatus().openId(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
