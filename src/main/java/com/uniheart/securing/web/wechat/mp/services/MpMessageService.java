@@ -51,6 +51,10 @@ public class MpMessageService {
                     xml = new Gson().fromJson(json, Xml.class);
 
                     received = xml.getTicket().equals(ticket);
+
+                    if(received){
+                        consumer.acknowledge(msg);
+                    }
                 } catch (Exception ex) {
                     logger.error("Failed to parse json: " + json);
                     xml.fromUserName(json);
