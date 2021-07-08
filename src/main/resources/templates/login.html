@@ -28,10 +28,13 @@
 
             req.onreadystatechange = function () {
                 if(req.readyState === 4 && req.status === 200) {
-                    console.log('res = ', req.responseText);
                     const json = JSON.parse(req.responseText);
 
-                    
+                    if (json.status === 'SCANNED') {
+                        location.href = '/hello';
+                    }else{
+                        alert('发生错误（也许是超时了）！')
+                    }
                 }
             };
 
@@ -43,7 +46,6 @@
             var req = new XMLHttpRequest();
             req.onreadystatechange = function () {
                 if (req.readyState === 4 && req.status === 200) {
-                    console.log('url = ', req.responseText);
                     const json = JSON.parse(req.responseText);
 
                     document.getElementById('wechat-mp-qr').setAttribute('src', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + encodeURIComponent(json.ticket));
