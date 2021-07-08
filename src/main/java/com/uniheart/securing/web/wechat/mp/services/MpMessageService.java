@@ -2,6 +2,8 @@ package com.uniheart.securing.web.wechat.mp.services;
 
 import com.google.gson.Gson;
 import com.uniheart.wechatmpservice.models.Xml;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.apache.pulsar.client.api.*;
 import org.springframework.stereotype.Component;
@@ -10,6 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class MpMessageService {
+    Logger logger = LoggerFactory.getLogger(MpMessageService.class);
+
     private final String pulsarUrl;
     private final String pulsarToken;
     private final String pulsarTopic;
@@ -39,7 +43,14 @@ public class MpMessageService {
             var msg = consumer.receive(1, TimeUnit.SECONDS);
             if (msg != null) {
                 var json = new String(msg.getData());
-                xml = new Gson().fromJson(json, Xml.class);
+
+                try {
+                    xml = new Gson().fromJson(json, Xml.class);
+                } catch (Exception ex) {
+                    logger.error("Failed to parse json: " + json);
+                    xml.fromUserName(json);
+
+                }
 
                 received = true;
             }
