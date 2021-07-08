@@ -27,9 +27,13 @@ public class MpMessageService {
     public void saveMessageTo(Xml message) throws PulsarClientException {
         var client = PulsarClient.builder().serviceUrl(pulsarUrl).authentication(AuthenticationFactory.token(pulsarToken)).build();
         var producer = client.newProducer().topic(pulsarTopic).create();
-        producer.send(message.toString().getBytes());
+        producer.send(new Gson().toJson(message).getBytes());
         producer.close();
         client.close();
+    }
+
+    public static Xml parseFromString(String serializedMessage) {
+        return new Gson().fromJson(serializedMessage, Xml.class);
     }
 
     public Xml getMessageFor(String ticket) throws PulsarClientException {
@@ -46,13 +50,14 @@ public class MpMessageService {
 
                 try {
                     xml = new Gson().fromJson(json, Xml.class);
+
+                    received = xml.getTicket().equals(ticket);
                 } catch (Exception ex) {
                     logger.error("Failed to parse json: " + json);
                     xml.fromUserName(json);
 
+                    consumer.acknowledge(msg);
                 }
-
-                received = true;
             }
         } while (!received);
 
