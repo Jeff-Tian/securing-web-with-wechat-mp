@@ -35,12 +35,15 @@ public class MpMessageService {
     public synchronized Xml getMessageFor(String ticket) throws PulsarClientException {
         var client = PulsarClient.builder().serviceUrl(pulsarUrl).authentication(AuthenticationFactory.token(pulsarToken)).build();
         var consumer = client.newConsumer().topic(pulsarTopic).subscriptionName("my-subscription").subscribe();
-        var xml = new Xml();
+        var xml = new Xml().fromUserName("empty");
 
         var received = false;
 
+        var count = 0;
+
         do {
             var msg = consumer.receive(1, TimeUnit.SECONDS);
+            count++;
             if (msg != null) {
                 var json = new String(msg.getData());
 
@@ -55,7 +58,7 @@ public class MpMessageService {
                     consumer.acknowledge(msg);
                 }
             }
-        } while (!received);
+        } while (!received && count < 30);
 
         consumer.close();
         client.close();

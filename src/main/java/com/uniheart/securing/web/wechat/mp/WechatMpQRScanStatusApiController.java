@@ -29,6 +29,10 @@ public final class WechatMpQRScanStatusApiController implements MpQrScanStatusAp
         try {
             var xml = this.mpMessageService.getMessageFor(ticket);
 
+            if(xml.getFromUserName().equals("empty")){
+                return new ResponseEntity<>(new MpQRScanStatus().openId(""), HttpStatus.REQUEST_TIMEOUT);
+            }
+
             var user = new Object() {};
 
             List<GrantedAuthority> authorities = new ArrayList<>();
