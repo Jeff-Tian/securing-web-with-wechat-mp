@@ -32,10 +32,6 @@ public class MpMessageService {
         client.close();
     }
 
-    public static Xml parseFromString(String serializedMessage) {
-        return new Gson().fromJson(serializedMessage, Xml.class);
-    }
-
     public Xml getMessageFor(String ticket) throws PulsarClientException {
         var client = PulsarClient.builder().serviceUrl(pulsarUrl).authentication(AuthenticationFactory.token(pulsarToken)).build();
         var consumer = client.newConsumer().topic(pulsarTopic).subscriptionName("my-subscription").subscribe();

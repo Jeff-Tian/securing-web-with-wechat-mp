@@ -38,7 +38,7 @@ public class MpServiceBeanTest {
 
     @Test
     void testConvertJsonToObject() {
-        String json = "{\"errcode\":40001,\"errmsg\":\"invalid credential, access_token is invalid or not latest rid: 60a256b1-0d6a1940-3e617241\"}";
+        final var json = "{\"errcode\":40001,\"errmsg\":\"invalid credential, access_token is invalid or not latest rid: 60a256b1-0d6a1940-3e617241\"}";
 
         assertThatNoException().isThrownBy(() -> {
             WeixinError error = new ObjectMapper().readValue(json, WeixinError.class);
