@@ -1,0 +1,1 @@
+.\gradlew clean bootRun & start "http://localhost:9090"
