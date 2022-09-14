@@ -1,6 +1,15 @@
-version: '3'
+version: '3.1'
 
 services:
+
+  pulsar:
+    image: apachepulsar/pulsar:2.6.0
+    ports:
+      - 8080:8080
+      - 6650:6650
+    environment:
+      PULSAR_MEM: " -Xms512m -Xmx512m -XX:MaxDirectMemorySize=1g"
+    command: bin/pulsar standalone
 
   redis:
     image: redis:latest

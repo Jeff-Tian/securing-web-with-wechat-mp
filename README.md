@@ -36,4 +36,5 @@ public final class ImplementController implements GeneratedApiController
 
 ```shell
 ./gradlew clean bootRun
+open http://localhost:9090
 ```
