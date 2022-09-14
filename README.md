@@ -35,6 +35,7 @@ public final class ImplementController implements GeneratedApiController
 ## Run from local
 
 ```shell
-./gradlew clean bootRun
+docker compose up -d
+WECHAT_ACCESS_TOKEN=xxx WECHAT_SECRET=yyy ./gradlew clean bootRun
 open http://localhost:9090
 ```
