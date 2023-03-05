@@ -8,6 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.apache.pulsar.client.api.*;
 import org.springframework.stereotype.Component;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.impl.auth.oauth2.AuthenticationFactoryOAuth2;
+
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -24,8 +30,10 @@ public class MpMessageService {
         this.pulsarTopic = pulsarTopic;
     }
 
-    public void saveMessageTo(Xml message) throws PulsarClientException {
-        var client = PulsarClient.builder().serviceUrl(pulsarUrl).authentication(AuthenticationFactory.token(pulsarToken)).build();
+    public void saveMessageTo(Xml message) throws PulsarClientException, MalformedURLException {
+        var client = PulsarClient.builder().serviceUrl(pulsarUrl).authentication(
+                AuthenticationFactoryOAuth2.clientCredentials(new URL("https://auth.streamnative.cloud/"), new URL("data:application/json;base64,eyJ0eXBlIjoic25fc2VydmljZV9hY2NvdW50IiwiY2xpZW50X2lkIjoiMFNKaDBMREFacklsYnhLdEloZ3B5cWJIYXpqaHhaZEciLCJjbGllbnRfc2VjcmV0IjoiejhhMkJDNVNVYVdoVmJLM0NubzczWmFXR1VVZ0JUMlJHaC1tRTdwUlhMcXhrYmRhQ2JFM1k0TXR6azNLMGRzMSIsImNsaWVudF9lbWFpbCI6Im1wLW1lc3NhZ2VAdW5paGVhcnQuYXV0aC5zdHJlYW1uYXRpdmUuY2xvdWQiLCJpc3N1ZXJfdXJsIjoiaHR0cHM6Ly9hdXRoLnN0cmVhbW5hdGl2ZS5jbG91ZC8ifQ=="), "urn:sn:pulsar:uniheart:alpha")
+        ).build();
         var producer = client.newProducer().topic(pulsarTopic).create();
         producer.send(new Gson().toJson(message).getBytes());
         producer.close();
@@ -52,7 +60,7 @@ public class MpMessageService {
 
                     received = xml.getTicket().equals(ticket);
 
-                    if(received){
+                    if (received) {
                         consumer.acknowledge(msg);
                     }
                 } catch (Exception ex) {
