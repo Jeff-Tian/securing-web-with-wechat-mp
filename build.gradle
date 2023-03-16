@@ -28,7 +28,7 @@ dependencies {
     implementation 'junit:junit:4.13.1'
     implementation 'io.github.cdimascio:dotenv-java:2.2.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'org.springdoc:springdoc-openapi-ui:1.5.2'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.1'
     implementation 'org.apache.pulsar:pulsar-client:2.6.3'

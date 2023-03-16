@@ -1,7 +1,11 @@
 package com.uniheart.securing.web.wechat.mp.services;
 
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
+import com.uniheart.securing.web.wechat.mp.models.PulsarKeyFile;
 import com.uniheart.wechatmpservice.models.Xml;
+import org.apache.pulsar.client.impl.auth.oauth2.AuthenticationOAuth2;
+import org.apache.pulsar.shade.com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,9 +19,11 @@ import java.net.URL;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.impl.auth.oauth2.AuthenticationFactoryOAuth2;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -36,30 +42,45 @@ public class MpMessageService {
 
     public void saveMessageTo(Xml message) throws IOException {
         var keyFileContent = System.getenv("PULSAR_KEY_FILE");
-        var pathToKeyFile = Paths.get("keyfile.json");
-
-        try {
-            Files.write(pathToKeyFile, keyFileContent.getBytes());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var keyFile = PulsarKeyFile.fromJson(keyFileContent);
 
         System.out.println("Key file content: ");
-        System.out.println(new String(Files.readAllBytes((pathToKeyFile))));
+        System.out.println("Type: " + keyFile.type);
+        System.out.println("Client ID: " + keyFile.client_id);
+        System.out.println("Client Secret" + keyFile.client_secret);
+        System.out.println("Issuer URL: " + keyFile.issuer_url);
+        System.out.println("topic: " + pulsarTopic);
+        System.out.println("serviceUrl: " + pulsarUrl);
 
         try {
+            var authenticationOAuth2 = new AuthenticationOAuth2();
+            var objectMapper = new ObjectMapper();
+            var params = Maps.newHashMap();
+            var data = Maps.newHashMap();
+            data.put("client_id", keyFile.client_id);
+            data.put("client_secret: ", keyFile.client_secret);
+
+            params.put("privateKey", "data:application/json;base64," + new String(Base64.getEncoder().encode(objectMapper.writeValueAsString(data).getBytes(StandardCharsets.UTF_8))));
+            params.put("issuerUrl", keyFile.issuer_url);
+            params.put("audience", "urn:sn:pulsar:uniheart:alpha");
+
+            authenticationOAuth2.configure(objectMapper.writeValueAsString(params));
+
             var client = PulsarClient.builder().serviceUrl(pulsarUrl).authentication(
-                    AuthenticationFactoryOAuth2.clientCredentials(new URL("https://auth.streamnative.cloud/"), new URL(String.format("file://%s", pathToKeyFile)), "urn:sn:pulsar:uniheart:alpha")
+                    authenticationOAuth2
             ).build();
 
+            String json = new Gson().toJson(message);
+            System.out.println("Connected to pulsar! will send message: " + json);
 
-            var producer = client.newProducer().topic(pulsarTopic).create();
-            producer.send(new Gson().toJson(message).getBytes());
+            var producer = client.newProducer().topic(pulsarTopic).producerName("uniheart-producer").create();
+
+            producer.send(json.getBytes());
             producer.close();
             client.close();
         } catch (PulsarClientException e) {
             e.printStackTrace();
-            System.out.println("Failed to connect to pulsar!");
+            System.out.println("Failed to connect to pulsar or failed to create producer!");
             throw e;
         }
     }
