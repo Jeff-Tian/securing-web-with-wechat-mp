@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.net.MalformedURLException;
 
 @RestController
 public class WechatMessageController implements MpMessageApi {
@@ -34,9 +33,6 @@ public class WechatMessageController implements MpMessageApi {
         } catch (PulsarClientException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
         }
     }
 }
