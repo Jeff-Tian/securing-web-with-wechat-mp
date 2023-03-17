@@ -21,6 +21,7 @@ class WechatMessageControllerTest {
 
     @Test
     void mpMessage() {
+        var o = new Object();
         var headers = new HttpHeaders();
         headers.set("Content-Type", "application/xml");
 
