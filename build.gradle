@@ -15,6 +15,14 @@ sourceCompatibility = '11'
 def pulsarVersion = '2.6.3'
 
 repositories {
+    mavenLocal()
+    maven { url "https://maven.aliyun.com/repository/public" }
+    maven { url "https://maven.aliyun.com/repository/spring" }
+    maven { url "https://maven.aliyun.com/repository/spring-plugin" }
+    maven { url "https://repo.spring.io/libs-release" }
+    maven { url "https://repo.spring.io/milestone" }
+    // 添加 snapshots 库地址
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     mavenCentral()
 }
 
@@ -28,10 +36,10 @@ dependencies {
     implementation 'junit:junit:4.13.1'
     implementation 'io.github.cdimascio:dotenv-java:2.2.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'org.springdoc:springdoc-openapi-ui:1.5.2'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.1'
-    implementation 'org.apache.pulsar:pulsar-client:2.6.3'
+    implementation 'org.apache.pulsar:pulsar-client:2.9.3'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.cucumber:cucumber-java:6.8.0'
@@ -54,7 +62,7 @@ openApiGenerate {
     invokerPackage = "com.uniheart.wechatmpservice"
     modelPackage = "com.uniheart.wechatmpservice.models"
     configOptions = [
-            dateLibrary: "java8",
+            dateLibrary  : "java8",
             interfaceOnly: "true",
     ]
 }
@@ -72,7 +80,7 @@ sonarqube {
     }
 }
 
-task installGitHooks(type: Copy) {
+tasks.register('installGitHooks', Copy) {
     def suffix = "macos"
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
         suffix = "windows"

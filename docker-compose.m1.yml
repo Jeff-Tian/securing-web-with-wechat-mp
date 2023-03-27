@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+
+  pulsar:
+    image: apachepulsar/pulsar:2.11.0
+    ports:
+      - 8080:8080
+      - 6650:6650
+    environment:
+      PULSAR_MEM: " -Xms512m -Xmx512m -XX:MaxDirectMemorySize=1g"
+    command: bin/pulsar standalone
+
+  redis:
+    image: redis:latest
+    container_name: redis-label
+    command: redis-server --requirepass yourpass
+    #   #  两个写入操作 只是为了解决启动后警告 可以去掉
+    #    /bin/bash -c "echo 511 > /proc/sys/net/core/somaxconn
+    #    && echo never > /sys/kernel/mm/transparent_hugepage/enabled
+    #    && redis-server /usr/local/etc/redis/redis.conf"
+    ports:
+      # 使用宿主机的端口映射到容器的端口
+      # 宿主机：容器
+      - "6379:6379"
